@@ -14,21 +14,21 @@ function Mainpage() {
   const slides = [
     {
       id: 1,
-      title: "Slide 1",
-      description: "Đây là mô tả cho ảnh thứ nhất",
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Aspect_ratio_-_3x2.svg/330px-Aspect_ratio_-_3x2.svg.png"
+      title: "ReDLT – Nền tảng tranh biện trực tuyến dành cho học sinh phổ thông",
+      description: "Không chỉ là nơi học tranh biện, ReDLT là không gian để bạn cất lên quan điểm, rèn luyện tư duy và tự tin thể hiện bản thân.",
+      image: "/src/assets/WhiteStyle2_img.jpg"
     },
     {
       id: 2,
-      title: "Slide 2",
-      description: "Đây là mô tả cho ảnh thứ hai",
-      image: "https://newbornposing.com/wp-content/uploads/2020/09/aspect-ratio-print-size-5.jpg"
+      title: "Học tranh biện theo cách gần gũi với học sinh",
+      description: "Không khô khan hay quá học thuật, ReDLT xây dựng môi trường thân thiện, trực quan và dễ tiếp cận cho học sinh phổ thông.",
+      image: "/src/assets/WhiteStyle_img.jpg"
     },
     {
       id: 3,
-      title: "Slide 3",
-      description: "Đây là mô tả cho ảnh thứ ba",
-      image: "https://cdn.sanity.io/images/uwt8iot0/production/661c8eab8fd88f6b4539455e79dbfd0e2f3bd410-3000x2000.png"
+      title: "Thông điệp của ReDLT",
+      description: "Tranh biện không phải để thắng người khác, mà để hiểu thế giới rõ hơn và hoàn thiện chính mình hơn mỗi ngày.",
+      image: "/src/assets/WhitetoGreen_img.jpg"
     }
   ]
 
@@ -101,7 +101,6 @@ function Mainpage() {
           to   { transform: translateX(0);    opacity: 1; }
         }
 
-        /* Animation khi load trang: Fade và Slide up */
         @keyframes fadeInUp {
           from {
             opacity: 0;
@@ -137,13 +136,180 @@ function Mainpage() {
           height: auto;
           display: block;
         }
+
+        /* About Us section styles */
+        .about-hero {
+          position: relative;
+          width: 100%;
+          height: 380px;
+          overflow: hidden;
+          border-radius: 16px;
+          margin-bottom: 60px;
+        }
+        .about-hero img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .about-hero-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 100%);
+          display: flex;
+          align-items: flex-start;
+          padding: 40px 48px;
+        }
+        .about-hero-title {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(28px, 4vw, 52px);
+          font-weight: 700;
+          color: #fff;
+          line-height: 1.15;
+          max-width: 400px;
+        }
+        .about-hero-sub {
+          font-family: 'Be Vietnam Pro', sans-serif;
+          font-size: 14px;
+          color: rgba(255,255,255,0.82);
+          max-width: 260px;
+          line-height: 1.6;
+          text-align: right;
+          position: absolute;
+          top: 40px;
+          right: 48px;
+        }
+        .about-scroll-btn {
+          position: absolute;
+          bottom: 32px;
+          right: 48px;
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: #4fc78e;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 16px rgba(79,199,142,0.35);
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .about-scroll-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(79,199,142,0.45);
+        }
+
+        .about-body {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 48px;
+          align-items: start;
+          margin-bottom: 48px;
+        }
+
+        @media (max-width: 768px) {
+          .about-body {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .about-quote-mark {
+          font-size: 52px;
+          line-height: 1;
+          color: #c8a96e;
+          font-family: Georgia, serif;
+          margin-bottom: 12px;
+          display: block;
+        }
+        .about-quote-text {
+          font-family: 'Be Vietnam Pro', sans-serif;
+          font-size: clamp(15px, 1.6vw, 18px);
+          color: #3D2B1F;
+          line-height: 1.75;
+          font-weight: 400;
+        }
+        .about-quote-img {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          border-radius: 12px;
+          margin-top: 28px;
+          display: block;
+        }
+
+        .about-card {
+          background: linear-gradient(135deg, #4A3728 0%, #2d1f14 100%);
+          border-radius: 16px;
+          padding: 36px 32px;
+          color: #fff;
+        }
+        .about-card-label {
+          font-family: 'Be Vietnam Pro', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          color: #c8a96e;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 20px;
+        }
+        .about-card-label svg {
+          flex-shrink: 0;
+        }
+        .about-card p {
+          font-family: 'Be Vietnam Pro', sans-serif;
+          font-size: 14px;
+          color: rgba(255,255,255,0.78);
+          line-height: 1.75;
+          margin: 0 0 18px;
+        }
+
+        .about-stats {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          border: 1px solid rgba(79, 199, 142, 0.2);
+          border-radius: 16px;
+          overflow: hidden;
+          background: rgba(255,255,255,0.6);
+          backdrop-filter: blur(10px);
+        }
+        .about-stat-item {
+          padding: 32px 24px;
+          text-align: center;
+          border-right: 1px solid rgba(79,199,142,0.15);
+        }
+        .about-stat-item:last-child {
+          border-right: none;
+        }
+        .about-stat-number {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(28px, 3.5vw, 44px);
+          font-weight: 700;
+          color: #4A3728;
+          display: block;
+          line-height: 1;
+          margin-bottom: 6px;
+        }
+        .about-stat-label {
+          font-family: 'Be Vietnam Pro', sans-serif;
+          font-size: 13px;
+          color: #888;
+        }
+
+        /* About section separator */
+        .about-section {
+          background: #f9f4ec;
+          position: relative;
+        }
       `}</style>
 
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" />
 
       <div style={{ position: "relative" }}>
 
-        {/* Gradient nền - Giữ nguyên không animation */}
+        {/* Gradient nền */}
         {quickStartTop > 0 && (
           <div
             aria-hidden="true"
@@ -174,7 +340,7 @@ function Mainpage() {
           />
         </div>
 
-        {/* Box chéo màu - Giữ nguyên không animation */}
+        {/* Box chéo màu — chéo trên (phải cao hơn trái) + chéo dưới (phải cao hơn trái) */}
         {quickStartTop > 0 && (
           <div
             aria-hidden="true"
@@ -183,7 +349,7 @@ function Mainpage() {
               top: quickStartTop - 80,
               left: 0,
               right: 0,
-              height: quickStartHeight + 40,
+              height: quickStartHeight - 60,
               zIndex: 2,
               pointerEvents: "none",
               filter: "drop-shadow(0px -15px 20px rgba(0,0,0,0.1))"
@@ -194,19 +360,21 @@ function Mainpage() {
                 width: "100%",
                 height: "100%",
                 background: "#e0c897",
-                clipPath: "polygon(0 0, 100% 80px, 100% 100%, 0 100%)",
+                /* Trên: trái thấp (80px offset), phải cao (0)
+                   Dưới: phải cao hơn (100% - 0), trái thấp hơn (100% - 60px) */
+                clipPath: "polygon(0 0, 100% 80px, 100% calc(100% - 60px), 0 100%)",
               }}
             />
           </div>
         )}
 
-        {/* z:3 — Toàn bộ nội dung nội dung - ÁP DỤNG ANIMATION TẠI ĐÂY */}
+        {/* z:3 — Toàn bộ nội dung */}
         <div style={{ position: "relative", zIndex: 3 }}>
 
           {/* HERO SLIDER */}
           <div ref={containerRef} style={styles.container}>
-            <div 
-              className="fade-in-up" 
+            <div
+              className="fade-in-up"
               style={{ ...styles.leftSection, paddingTop: `${imageTop}px` }}
             >
               <div>
@@ -246,7 +414,7 @@ function Mainpage() {
           <div
             ref={quickStartRef}
             style={{
-              padding: "60px 40px",
+              padding: "50px 40px 150px",
               maxWidth: "1700px",
               margin: "0 auto"
             }}
@@ -290,7 +458,7 @@ function Mainpage() {
                   id: 1,
                   title: "Đấu Trường",
                   description: "Nơi bạn có thể tìm những công cụ hỗ trợ tranh biện",
-                  image: "https://images.unsplash.com/photo-1516321318423-f06f70db51ba?w=400&h=300&fit=crop",
+                  image: "/src/assets/WhiteAndBlue_img.jpg",
                   accent: "#4f8ef7"
                 },
                 {
@@ -310,7 +478,7 @@ function Mainpage() {
               ].map((card, idx) => (
                 <div
                   key={card.id}
-                  className={`fade-in-up delay-${idx + 2}`} // Staggered delay cho từng card
+                  className={`fade-in-up delay-${idx + 2}`}
                   style={{
                     width: "100%",
                     minHeight: "400px",
@@ -391,6 +559,89 @@ function Mainpage() {
 
         </div>{/* end z-index wrapper */}
       </div>{/* end position:relative root */}
+
+      {/* ===================== ABOUT US SECTION ===================== */}
+      <div
+        className="about-section"
+        style={{
+          padding: "80px 40px 80px",
+          maxWidth: "1700px",
+          margin: "0 auto",
+          boxSizing: "border-box"
+        }}
+      >
+        {/* Hero banner */}
+        <div className="about-hero fade-in-up">
+          <img
+            src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1400&h=600&fit=crop"
+            alt="About ReDLT"
+          />
+          <div className="about-hero-overlay">
+            <h2 className="about-hero-title">
+              Câu chuyện,<br />Tầm nhìn<br />& Giá trị
+            </h2>
+          </div>
+          <p className="about-hero-sub">
+            Tìm hiểu về cam kết của chúng tôi với sự xuất sắc, đổi mới và các nguyên tắc định hướng công việc mỗi ngày.
+          </p>
+          <button className="about-scroll-btn" aria-label="Cuộn xuống">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+          </button>
+        </div>
+
+        {/* Body: quote + card */}
+        <div className="about-body">
+          {/* Left: quote + image */}
+          <div className="fade-in-up delay-1">
+            <span className="about-quote-mark">"</span>
+            <p className="about-quote-text">
+              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+            </p>
+            <img
+              className="about-quote-img"
+              src="https://images.unsplash.com/photo-1543269865-cbf427effbad?w=600&h=300&fit=crop"
+              alt="Học sinh tranh biện"
+            />
+          </div>
+
+          {/* Right: dark info card */}
+          <div className="about-card fade-in-up delay-2">
+            <div className="about-card-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+              </svg>
+              Về chúng tôi
+            </div>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+            </p>
+            <p style={{ marginBottom: 0 }}>
+              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+            </p>
+          </div>
+        </div>
+
+        {/* Stats bar */}
+        <div className="about-stats fade-in-up delay-3">
+          <div className="about-stat-item">
+            <span className="about-stat-number">abc+</span>
+            <span className="about-stat-label">Khum bt để gì</span>
+          </div>
+          <div className="about-stat-item">
+            <span className="about-stat-number">xyz+</span>
+            <span className="about-stat-label">Cái này cũng v</span>
+          </div>
+          <div className="about-stat-item">
+            <span className="about-stat-number">ax²+bx+c</span>
+            <span className="about-stat-label">Nốt cái này nữa</span>
+          </div>
+        </div>
+      </div>
     </>
   )
 }
