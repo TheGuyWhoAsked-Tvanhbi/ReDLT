@@ -11,31 +11,8 @@ import Header from './Header';
 import { Routes,Route, useLocation } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
-
-firebase.initializeApp({
-  apiKey: "AIzaSyCz-FPkOfqcdenQoQD5QVDLBvdtVlp0he4",
-  authDomain: "redlt-4a5c8.firebaseapp.com",
-  projectId: "redlt-4a5c8",
-  storageBucket: "redlt-4a5c8.firebasestorage.app",
-  messagingSenderId: "74648469314",
-  appId: "1:74648469314:web:a033b225e978c7794d12db",
-  measurementId: "G-B58K7SGDN9"
-});
-
-const auth = firebase.auth();
-const firestore = firebase.firestore();
-
 
 function App() {
-  const location = useLocation();
-
-  //const user = useAuthState(auth);
 
   return (
     <>
@@ -51,17 +28,6 @@ function App() {
         </Routes>
       </div>
     </>
-  )
-}
-
-function Signin() {
-  const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-  }
-
-  return (
-    <button onClick={signInWithGoogle}>Sign in with Google</button>
   )
 }
 

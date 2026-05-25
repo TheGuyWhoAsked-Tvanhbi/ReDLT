@@ -564,9 +564,9 @@ function Mainpage() {
       <div
         className="about-section"
         style={{
-          padding: "80px 40px 80px",
+          padding: "200px 40px 80px",
           maxWidth: "1700px",
-          margin: "0 auto",
+          margin: "-120px auto",
           boxSizing: "border-box"
         }}
       >
