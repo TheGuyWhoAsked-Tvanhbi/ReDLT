@@ -1,16 +1,48 @@
 import React, { useState } from "react";
+import { useAuth } from "/src/AuthContext.jsx";
 
 function Login() {
   const [isRegister, setIsRegister] = useState(false);
   const [isFading, setIsFading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { login } = useAuth();
 
   const switchMode = (registerMode) => {
     setIsFading(true);
     setTimeout(() => {
       setIsRegister(registerMode);
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
       setIsFading(false);
     }, 150);
   };
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    try {
+      await login(email, password);
+      alert("Đăng nhập thành công!");
+    } catch (error) {
+      alert("Lỗi: " + error.message);
+    }
+  }
+
+  async function handleRegister(e) {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Mật khẩu xác nhận không khớp!");
+      return;
+    }
+    try {
+      // Thêm hàm register từ AuthContext nếu có, hiện để placeholder
+      alert("Đăng kí thành công!");
+    } catch (error) {
+      alert("Lỗi: " + error.message);
+    }
+  }
 
   const cardStyle = {
     ...styles.card,
@@ -22,97 +54,89 @@ function Login() {
     <div style={styles.page}>
       <div style={styles.left}>
         <div style={styles.logoBox}>
-            <img 
-              src='./src/assets/logo.png'
-              alt="logo" 
-              style={styles.logoImage}
-            />
+          <img
+            src='./src/assets/logo.png'
+            alt="logo"
+            style={styles.logoImage}
+          />
         </div>
         <div style={cardStyle}>
           <h2 style={styles.title}>{isRegister ? "Tạo tài khoản" : "Đăng nhập"}</h2>
 
           {isRegister ? (
             <>
-              <label style={styles.label} htmlFor="reg-email">
-                Email
-              </label>
+              <label style={styles.label} htmlFor="reg-email">Email</label>
               <input
                 id="reg-email"
                 type="email"
                 placeholder="Nhập email của bạn"
                 style={styles.input}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
 
-              <label style={styles.label} htmlFor="reg-password">
-                Mật khẩu
-              </label>
+              <label style={styles.label} htmlFor="reg-password">Mật khẩu</label>
               <input
                 id="reg-password"
                 type="password"
                 placeholder="Nhập mật khẩu của bạn"
                 style={styles.input}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
-              <label style={styles.label} htmlFor="confirm-password">
-                Xác nhận mật khẩu
-              </label>
+              <label style={styles.label} htmlFor="confirm-password">Xác nhận mật khẩu</label>
               <input
                 id="confirm-password"
                 type="password"
                 placeholder="Nhập lại mật khẩu của bạn"
                 style={styles.input}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
 
               <div style={styles.accountRow}>
-                <button
-                  type="button"
-                  style={styles.linkButton}
-                  onClick={() => switchMode(false)}
-                >
+                <button type="button" style={styles.linkButton} onClick={() => switchMode(false)}>
                   Đã có tài khoản?
                 </button>
               </div>
 
-              <button type="button" style={styles.loginButton}>
+              <button type="button" style={styles.loginButton} onClick={handleRegister}>
                 <b>Đăng kí</b>
               </button>
             </>
           ) : (
             <>
-              <label style={styles.label} htmlFor="email">
-                Email
-              </label>
+              <label style={styles.label} htmlFor="email">Email</label>
               <input
                 id="email"
                 type="email"
                 placeholder="Nhập email của bạn"
                 style={styles.input}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
 
-              <label style={styles.label} htmlFor="password">
-                Mật khẩu
-              </label>
+              <label style={styles.label} htmlFor="password">Mật khẩu</label>
               <input
                 id="password"
                 type="password"
                 placeholder="Nhập mật khẩu của bạn"
                 style={styles.input}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               <div style={styles.linkRow}>
                 <button type="button" style={styles.linkButton}>
                   Quên mật khẩu?
                 </button>
-                <button
-                  type="button"
-                  style={styles.linkButton}
-                  onClick={() => switchMode(true)}
-                >
+                <button type="button" style={styles.linkButton} onClick={() => switchMode(true)}>
                   Tạo tài khoản
                 </button>
               </div>
 
-              <button type="button" style={styles.loginButton}>
+              <button type="button" style={styles.loginButton} onClick={handleLogin}>
                 <b>Đăng nhập</b>
               </button>
             </>
@@ -121,9 +145,9 @@ function Login() {
       </div>
       <div style={styles.right}>
         <div style={styles.sideBox}>
-          <img 
-            src="https://brand.fsu.edu/sites/g/files/upcbnu4656/files/brand/placeholders/ratio-4-5.png" 
-            alt="side" 
+          <img
+            src="https://brand.fsu.edu/sites/g/files/upcbnu4656/files/brand/placeholders/ratio-4-5.png"
+            alt="side"
             style={styles.sideBoxImage}
           />
         </div>
@@ -161,7 +185,7 @@ const styles = {
   },
   sideBox: {
     height: "80vh",
-    aspectRatio: "4 / 5", 
+    aspectRatio: "4 / 5",
     backgroundColor: "#FBEEC2",
     borderRadius: "32px",
   },
@@ -170,10 +194,10 @@ const styles = {
     height: "100%",
     objectFit: "cover",
     borderRadius: "32px",
-  },  
+  },
   card: {
     width: "100%",
-    maxWidth: "600px    ",
+    maxWidth: "600px",
     backgroundColor: "#ffffff",
     borderRadius: "16px",
     boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08)",
@@ -182,7 +206,7 @@ const styles = {
   },
   logoBox: {
     width: "30%",
-    height: "30%    ",
+    height: "30%",
     borderRadius: "12px",
     display: "flex",
     justifyContent: "center",
