@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useAuth } from "/src/AuthContext.jsx";
+import { useAuth } from "/src/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [isRegister, setIsRegister] = useState(false);
@@ -7,7 +8,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { login } = useAuth();
+  const [error, setError] = useState("");
+  const { login , signup} = useAuth();
 
   const switchMode = (registerMode) => {
     setIsFading(true);
@@ -16,31 +18,58 @@ function Login() {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
+      setError("");
       setIsFading(false);
     }, 150);
   };
 
+  const navigate = useNavigate();
+
   async function handleLogin(e) {
-    e.preventDefault();
+    setError("");
     try {
       await login(email, password);
       alert("Đăng nhập thành công!");
+      navigate("/");
     } catch (error) {
-      alert("Lỗi: " + error.message);
+      setError(firebaseErrorMessage(error.code));
     }
   }
 
   async function handleRegister(e) {
-    e.preventDefault();
+    setError("");
     if (password !== confirmPassword) {
-      alert("Mật khẩu xác nhận không khớp!");
+      setError("Mật khẩu xác nhận không khớp!");
       return;
     }
     try {
-      // Thêm hàm register từ AuthContext nếu có, hiện để placeholder
-      alert("Đăng kí thành công!");
+      await signup(email, password);
+      switchMode(false);
     } catch (error) {
-      alert("Lỗi: " + error.message);
+      setError(firebaseErrorMessage(error.code));
+    }
+  }
+
+  function firebaseErrorMessage(code) {
+    switch (code) {
+      case "auth/invalid-email":
+        return "Email không hợp lệ.";
+      case "auth/user-not-found":
+        return "Không tìm thấy tài khoản với email này.";
+      case "auth/wrong-password":
+        return "Mật khẩu không đúng.";
+      case "auth/email-already-in-use":
+        return "Email này đã được sử dụng.";
+      case "auth/weak-password":
+        return "Mật khẩu phải có ít nhất 6 ký tự.";
+      case "auth/too-many-requests":
+        return "Quá nhiều lần thử. Vui lòng thử lại sau.";
+      case "auth/network-request-failed":
+        return "Lỗi kết nối mạng. Vui lòng kiểm tra lại.";
+      case "auth/invalid-credential":
+        return "Email hoặc mật khẩu không đúng.";
+      default:
+        return "Đã có lỗi xảy ra. Vui lòng thử lại.";
     }
   }
 
@@ -90,10 +119,17 @@ function Login() {
                 id="confirm-password"
                 type="password"
                 placeholder="Nhập lại mật khẩu của bạn"
-                style={styles.input}
+                style={{
+                  ...styles.input,
+                  marginBottom: "6px",
+                  borderColor: error ? "#e53e3e" : "#d1d5db",
+                }}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
+              <div style={styles.errorHolder}>
+                {error && <span style={styles.errorText}>⚠ {error}</span>}
+              </div>
 
               <div style={styles.accountRow}>
                 <button type="button" style={styles.linkButton} onClick={() => switchMode(false)}>
@@ -102,7 +138,7 @@ function Login() {
               </div>
 
               <button type="button" style={styles.loginButton} onClick={handleRegister}>
-                <b>Đăng kí</b>
+                <b>Đăng ký</b>
               </button>
             </>
           ) : (
@@ -122,10 +158,17 @@ function Login() {
                 id="password"
                 type="password"
                 placeholder="Nhập mật khẩu của bạn"
-                style={styles.input}
+                style={{
+                  ...styles.input,
+                  marginBottom: "6px",
+                  borderColor: error ? "#e53e3e" : "#d1d5db",
+                }}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <div style={styles.errorHolder}>
+                {error && <span style={styles.errorText}>⚠ {error}</span>}
+              </div>
 
               <div style={styles.linkRow}>
                 <button type="button" style={styles.linkButton}>
@@ -240,6 +283,15 @@ const styles = {
     fontSize: "14px",
     outline: "none",
     boxSizing: "border-box",
+  },
+  errorHolder: {
+    minHeight: "20px",
+    marginBottom: "14px",
+  },
+  errorText: {
+    fontSize: "13px",
+    color: "#e53e3e",
+    lineHeight: "1.4",
   },
   linkRow: {
     display: "flex",
