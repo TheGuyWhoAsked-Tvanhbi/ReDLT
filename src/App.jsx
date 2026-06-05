@@ -13,7 +13,6 @@ import Header from './Header';
 // --- COMPONENT BẢO VỆ (Viết chung trong file này) ---
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useAuth();
-  // Nếu có user thì cho qua, không có thì đá về /login
   return currentUser ? children : <Navigate to="/login" replace />;
 };
 
