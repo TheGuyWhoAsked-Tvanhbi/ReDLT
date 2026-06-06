@@ -9,7 +9,7 @@ const PARTICIPANT_OPTIONS = [
   { count: 6, icon: "🫂" },
 ];
 
-const HERO_IMG = "/src/assets/arena_hero_img.jpg";
+const HERO_IMG = "/assets/arena_hero_img.jpg";
 
 export default function DebatesAI() {
   const [fileName, setFileName] = useState("");

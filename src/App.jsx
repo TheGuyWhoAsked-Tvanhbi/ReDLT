@@ -30,11 +30,13 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/blogs" element={<Blogpage />} />
 
+
           {/* Các trang yêu cầu ĐĂNG NHẬP */}
           <Route path="/mindmap" element={<PrivateRoute><MindmapPage /></PrivateRoute>} />
           <Route path="/arena" element={<PrivateRoute><Arena /></PrivateRoute>} />
           <Route path="/user" element={<PrivateRoute><Userpage /></PrivateRoute>} />
           
+
         </Routes>
       </div>
     </AuthProvider>

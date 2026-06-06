@@ -266,7 +266,7 @@ const Header = () => {
         <div className="header-inner">
           <a href="/" className="logo-wrap">
             <div className="logo-circle">
-              <img src="./src/assets/logo.png" alt="Logo" />
+              <img src="/assets/logo.png" alt="Logo" />
             </div>
           </a>
 

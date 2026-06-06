@@ -16,19 +16,19 @@ function Mainpage() {
       id: 1,
       title: "ReDLT – Nền tảng tranh biện trực tuyến dành cho học sinh phổ thông",
       description: "Không chỉ là nơi học tranh biện, ReDLT là không gian để bạn cất lên quan điểm, rèn luyện tư duy và tự tin thể hiện bản thân.",
-      image: "/src/assets/WhiteStyle2_img.jpg"
+      image: "/assets/WhiteStyle2_img.jpg"
     },
     {
       id: 2,
       title: "Học tranh biện theo cách gần gũi với học sinh",
       description: "Không khô khan hay quá học thuật, ReDLT xây dựng môi trường thân thiện, trực quan và dễ tiếp cận cho học sinh phổ thông.",
-      image: "/src/assets/WhiteStyle_img.jpg"
+      image: "/assets/WhiteStyle_img.jpg"
     },
     {
       id: 3,
       title: "Thông điệp của ReDLT",
       description: "Tranh biện không phải để thắng người khác, mà để hiểu thế giới rõ hơn và hoàn thiện chính mình hơn mỗi ngày.",
-      image: "/src/assets/WhitetoGreen_img.jpg"
+      image: "/assets/WhitetoGreen_img.jpg"
     }
   ]
 
@@ -335,7 +335,7 @@ function Mainpage() {
           }}
         >
           <img
-            src="/src/assets/pattern01.png"
+            src="/assets/pattern01.png"
             alt=""
           />
         </div>
@@ -458,7 +458,7 @@ function Mainpage() {
                   id: 1,
                   title: "Đấu Trường",
                   description: "Nơi bạn có thể tìm những công cụ hỗ trợ tranh biện",
-                  image: "/src/assets/WhiteAndBlue_img.jpg",
+                  image: "/assets/WhiteAndBlue_img.jpg",
                   accent: "#4f8ef7"
                 },
                 {
