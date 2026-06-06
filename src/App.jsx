@@ -9,6 +9,7 @@ import MindmapPage from './Main/Mindmap';
 import Userpage from './Main/Userpage';
 import Blogpage from './Main/Blogpage';
 import Header from './Header';
+import DebatesAI from './Main/Score';
 
 // --- COMPONENT BẢO VỆ (Viết chung trong file này) ---
 const PrivateRoute = ({ children }) => {
@@ -33,9 +34,10 @@ function App() {
 
           {/* Các trang yêu cầu ĐĂNG NHẬP */}
           <Route path="/mindmap" element={<PrivateRoute><MindmapPage /></PrivateRoute>} />
+          <Route path="/arena/ai-scores" element={<PrivateRoute><Arena /></PrivateRoute>} />
           <Route path="/arena" element={<PrivateRoute><Arena /></PrivateRoute>} />
           <Route path="/user" element={<PrivateRoute><Userpage /></PrivateRoute>} />
-          
+          <Route path="/ai-scores" element={<PrivateRoute><DebatesAI /></PrivateRoute>} />
 
         </Routes>
       </div>

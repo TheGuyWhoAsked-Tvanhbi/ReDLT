@@ -32,6 +32,16 @@ function Mainpage() {
     }
   ]
 
+  const handleItemClick = (item) => {
+    if (item.title === "Đấu Trường") {
+      window.location.pathname = "/arena";
+    } else if (item.title === "Bài đăng") {
+      window.location.pathname = "/blogs";
+    } else if (item.title === "Mindmap") {
+      window.location.pathname = "/mindmap";
+    }
+  }
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % slides.length)
@@ -464,8 +474,8 @@ function Mainpage() {
                 },
                 {
                   id: 2,
-                  title: "Thư viện tài liệu",
-                  description: "Tìm kiếm các tài liệu tranh biện đã được đăng tải",
+                  title: "Bài đăng",
+                  description: "Tìm kiếm các bài đăng và tài liệu tranh biện đã được đăng tải",
                   image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=400&h=300&fit=crop",
                   accent: "#f7874f"
                 },
@@ -480,6 +490,7 @@ function Mainpage() {
                 <div
                   key={card.id}
                   className={`fade-in-up delay-${idx + 2}`}
+                  onClick={() => handleItemClick(card)}
                   style={{
                     width: "100%",
                     minHeight: "400px",
