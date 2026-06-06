@@ -84,7 +84,7 @@ function Login() {
       <div style={styles.left}>
         <div style={styles.logoBox}>
           <img
-            src='./src/assets/logo.png'
+            src='/assets/logo.png'
             alt="logo"
             style={styles.logoImage}
           />

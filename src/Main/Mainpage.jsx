@@ -168,12 +168,13 @@ function Mainpage() {
           max-width: 400px;
         }
         .about-hero-sub {
+          margin-top: 9px;
           font-family: 'Be Vietnam Pro', sans-serif;
-          font-size: 14px;
+          font-size: 13px;
           color: rgba(255,255,255,0.82);
           max-width: 260px;
           line-height: 1.6;
-          text-align: right;
+          text-align: center;
           position: absolute;
           top: 40px;
           right: 48px;
@@ -582,7 +583,7 @@ function Mainpage() {
             </h2>
           </div>
           <p className="about-hero-sub">
-            Tìm hiểu về cam kết của chúng tôi với sự xuất sắc, đổi mới và các nguyên tắc định hướng công việc mỗi ngày.
+            Tìm hiểu về ReDLT và mục tiêu cũng như định hướng phát triển của chúng tôi.
           </p>
           <button className="about-scroll-btn" aria-label="Cuộn xuống">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -597,7 +598,9 @@ function Mainpage() {
           <div className="fade-in-up delay-1">
             <span className="about-quote-mark">"</span>
             <p className="about-quote-text">
-              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+              <strong>ReDLT</strong> là nền tảng hỗ trợ học sinh rèn luyện kỹ năng tranh biện và tư duy phản biện thông qua môi trường học tập trực tuyến hiện đại. Chúng tôi kết hợp công nghệ, tài nguyên học thuật để giúp người học phát triển khả năng lập luận, giao tiếp và phản biện một cách hiệu quả.
+Mục tiêu của <strong>ReDLT</strong> là xây dựng một cộng đồng học tập tích cực, nơi mọi học sinh đều có cơ hội tiếp cận tranh biện một cách bài bản, công bằng và thuận tiện, bất kể điều kiện hay vị trí địa lý.
+Thông qua các hoạt động thực hành và chia sẻ kiến thức, hướng đến việc hình thành một thế hệ học sinh năng động, tự tin và có tư duy đa chiều.
             </p>
             <img
               className="about-quote-img"
@@ -607,7 +610,7 @@ function Mainpage() {
           </div>
 
           {/* Right: dark info card */}
-          <div className="about-card fade-in-up delay-2">
+          <div className="about-card fade-in-up delay-2 mt-16" >
             <div className="about-card-label">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
@@ -615,13 +618,13 @@ function Mainpage() {
               Về chúng tôi
             </div>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+              ReDLT là nền tảng tranh biện trực tuyến được xây dựng với sứ mệnh đưa kỹ năng tranh biện và tư duy phản biện đến gần hơn với học sinh phổ thông Việt Nam. Chúng tôi mong muốn tạo ra một môi trường học tập mở, hiện đại và dễ tiếp cận, nơi học sinh có thể tự tin trình bày quan điểm, phát triển lập luận logic và học cách nhìn nhận vấn đề từ nhiều góc độ khác nhau.
             </p>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+              Thông qua hệ thống đấu trường tranh biện trực tuyến, thư viện tài liệu học thuật, diễn đàn trao đổi kiến thức và công cụ xây dựng sơ đồ tư duy, ReDLT giúp người học không chỉ nâng cao kỹ năng giao tiếp mà còn hình thành thói quen tư duy độc lập, tôn trọng sự khác biệt và làm việc nhóm hiệu quả. Bên cạnh đó, nền tảng còn tích hợp công nghệ trí tuệ nhân tạo để hỗ trợ phân tích và đánh giá bài tranh biện theo các tiêu chí chuyên môn, mang đến những phản hồi khách quan và kịp thời nhằm giúp người dùng liên tục hoàn thiện bản thân.
             </p>
             <p style={{ marginBottom: 0 }}>
-              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+              Chúng tôi tin rằng tranh biện không chỉ là một kỹ năng học thuật mà còn là hành trang quan trọng giúp thế hệ trẻ phát triển bản lĩnh, trách nhiệm và khả năng thích nghi trong thời đại số.
             </p>
           </div>
         </div>
@@ -629,16 +632,16 @@ function Mainpage() {
         {/* Stats bar */}
         <div className="about-stats fade-in-up delay-3">
           <div className="about-stat-item">
-            <span className="about-stat-number">abc+</span>
-            <span className="about-stat-label">Khum bt để gì</span>
+            <span className="about-stat-number">129+</span>
+            <span className="about-stat-label">Học sinh tham gia khảo sát</span>
           </div>
           <div className="about-stat-item">
-            <span className="about-stat-number">xyz+</span>
-            <span className="about-stat-label">Cái này cũng v</span>
+            <span className="about-stat-number">32+</span>
+            <span className="about-stat-label">Học sinh đã trực tiếp thử nghiệm</span>
           </div>
           <div className="about-stat-item">
-            <span className="about-stat-number">ax²+bx+c</span>
-            <span className="about-stat-label">Nốt cái này nữa</span>
+            <span className="about-stat-number">4.48/5</span> 
+            <span className="about-stat-label">Đánh giá trung bình</span>
           </div>
         </div>
       </div>
