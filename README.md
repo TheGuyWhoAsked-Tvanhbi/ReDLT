@@ -1,1 +1,1 @@
-Toi bùn ngủ
+Phần còn lại Hữu làm đi Hữu, tui tin tưởng fen

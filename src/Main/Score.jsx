@@ -173,7 +173,7 @@ export default function DebatesAI() {
         <button style={{ ...S.btn, opacity: loading ? 0.75 : 1 }} onClick={processDebatesAudio} disabled={loading}>
           {loading
             ? <span style={S.btnInner}><span style={S.spinner} />Đang xử lý...</span>
-            : <span style={S.btnInner}>✦ Bắt đầu phân tích</span>
+            : <span style={S.btnInner}>Bắt đầu phân tích</span>
           }
         </button>
 

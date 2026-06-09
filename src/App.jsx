@@ -10,8 +10,9 @@ import Userpage from './Main/Userpage';
 import Blogpage from './Main/Blogpage';
 import Header from './Header';
 import DebatesAI from './Main/Score';
+import DebateRandomizer from './Main/RandomTopic';
 
-// --- COMPONENT BẢO VỆ (Viết chung trong file này) ---
+// Gomen amanai
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useAuth();
   return currentUser ? children : <Navigate to="/login" replace />;
@@ -30,6 +31,7 @@ function App() {
           <Route path="/" element={<Mainpage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/blogs" element={<Blogpage />} />
+          <Route path="/random-topic" element={<DebateRandomizer />} />
 
 
           {/* Các trang yêu cầu ĐĂNG NHẬP */}
@@ -38,7 +40,7 @@ function App() {
           <Route path="/arena" element={<PrivateRoute><Arena /></PrivateRoute>} />
           <Route path="/user" element={<PrivateRoute><Userpage /></PrivateRoute>} />
           <Route path="/ai-scores" element={<PrivateRoute><DebatesAI /></PrivateRoute>} />
-
+          
         </Routes>
       </div>
     </AuthProvider>

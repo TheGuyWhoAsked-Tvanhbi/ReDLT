@@ -44,11 +44,10 @@ export default function App() {
 
   const handleItemClick = (item) => {
     if (item.label === "Ngẫu nhiên chủ đề") {
-      //window.location.pathname = "/arena/random-topic";
-      alert("not yet implemented");
+      window.location.pathname = "/random-topic";
     }
     else if (item.label === "AI chấm tranh biện") {
-      window.location.pathname = "ai-scores";
+      window.location.pathname = "/ai-scores";
     }
   }
 

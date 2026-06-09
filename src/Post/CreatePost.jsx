@@ -1,9 +1,13 @@
 import { useState, useRef, useEffect } from "react";
+import { db , auth , storage} from "../firebase.js";
+import { addDoc , collection } from "firebase/firestore";
+import { ref , uploadBytes } from "firebase/storage";
 
 const TAGS_OPTIONS = [
   "Lập luận", "Phản biện", "Kỹ năng", "Chiến thuật",
   "Kinh nghiệm", "Phân tích", "Thi đấu", "Tài liệu gốc",
   "Hướng dẫn", "Tranh luận", "Nghiên cứu", "Thực hành",
+  "Tập sự", "Chuyên sâu",
 ];
 
 const CATEGORIES = ["Bài đăng", "Ván đấu", "Tài liệu"];
@@ -51,12 +55,18 @@ export default function CreatePost() {
   const [category, setCategory] = useState("Bài đăng");
   const [selectedTags, setSelectedTags] = useState([]);
   const [htmlContent, setHtmlContent] = useState(DEFAULT_HTML);
-  const [editMode, setEditMode] = useState("edit"); // "edit" | "preview"
+  const [editMode, setEditMode] = useState("edit");
   const [youtubeLink, setYoutubeLink] = useState("");
   const [docFile, setDocFile] = useState(null);
+  const [thumbnail, setThumbnail] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [mounted, setMounted] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const iframeRef = useRef(null);
   const fileInputRef = useRef(null);
+  const thumbnailInputRef = useRef(null);
+
+  const postsCollectionRef = collection(db, "posts");
 
   useEffect(() => {
     requestAnimationFrame(() => setMounted(true));
@@ -87,10 +97,38 @@ export default function CreatePost() {
     if (file) setDocFile(file);
   };
 
-  const handleUploadClick = () => {
-    
-  }
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setThumbnail(file);
+      setThumbnailPreview(URL.createObjectURL(file));
+    }
+  };
 
+  const removeThumbnail = () => {
+    setThumbnail(null);
+    if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+    setThumbnailPreview(null);
+    thumbnailInputRef.current.value = "";
+  };
+
+  const handleUploadClick = async () => {
+    if (!thumbnail) return null;
+    const fileExt = `thumbnails/${Date.now()}_${thumbnail.name}`;
+    const imageRef = ref(storage, fileExt);
+    await uploadBytes(imageRef, thumbnail);
+
+    if (category === "Bài đăng") {
+      await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: htmlContent, createdAt: new Date()});
+      setShowSuccess(true);
+    } else if (category === "Ván đấu") {
+      await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: youtubeLink, createdAt: new Date()});
+      setShowSuccess(true);
+    } else if (category === "Tài liệu") {
+      setShowSuccess(true);
+    }
+    console.log("all complete");
+  };
 
   return (
     <>
@@ -128,8 +166,6 @@ export default function CreatePost() {
           position: relative;
           overflow-x: hidden;
         }
-
-        /* decorative dot pattern */
         .cp-page::before {
           content: '';
           position: fixed;
@@ -139,8 +175,6 @@ export default function CreatePost() {
           pointer-events: none;
           z-index: 0;
         }
-
-        /* decorative blob */
         .cp-page::after {
           content: '';
           position: fixed;
@@ -162,15 +196,9 @@ export default function CreatePost() {
           transform: translateY(24px);
           transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1);
         }
-        .cp-container.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        .cp-container.visible { opacity: 1; transform: translateY(0); }
 
-        /* ── HEADER ── */
-        .cp-header {
-          margin-bottom: 36px;
-        }
+        .cp-header { margin-bottom: 36px; }
         .cp-header-eyebrow {
           display: inline-flex;
           align-items: center;
@@ -209,22 +237,18 @@ export default function CreatePost() {
           letter-spacing: 0.3px;
         }
 
-        /* ── CARD ── */
         .cp-card {
           background: rgba(255,255,255,0.82);
           backdrop-filter: blur(12px);
           border: 1.5px solid rgba(224,200,151,0.5);
           border-radius: 24px;
           padding: 36px;
-          box-shadow:
-            0 4px 24px rgba(160,120,64,0.1),
-            0 1px 0 rgba(255,255,255,0.9) inset;
+          box-shadow: 0 4px 24px rgba(160,120,64,0.1), 0 1px 0 rgba(255,255,255,0.9) inset;
           display: flex;
           flex-direction: column;
           gap: 28px;
         }
 
-        /* ── FIELD ── */
         .cp-field { display: flex; flex-direction: column; gap: 8px; }
         .cp-label {
           font-size: 11px;
@@ -234,7 +258,6 @@ export default function CreatePost() {
           font-weight: 600;
         }
 
-        /* ── TITLE INPUT ── */
         .cp-title-input {
           width: 100%;
           font-family: 'Playfair Display', serif;
@@ -254,10 +277,8 @@ export default function CreatePost() {
           box-shadow: 0 0 0 4px rgba(224,200,151,0.25), 0 4px 16px rgba(160,120,64,0.12);
         }
 
-        /* ── ROW ── */
         .cp-row { display: flex; gap: 16px; align-items: flex-start; }
 
-        /* ── SELECT ── */
         .cp-select-wrap { flex: 0 0 30%; }
         .cp-select {
           width: 100%;
@@ -277,18 +298,10 @@ export default function CreatePost() {
           font-family: 'DM Sans', sans-serif;
           transition: border-color .2s, box-shadow .2s;
         }
-        .cp-select:focus {
-          border-color: #c8a86b;
-          box-shadow: 0 0 0 4px rgba(224,200,151,0.25);
-        }
+        .cp-select:focus { border-color: #c8a86b; box-shadow: 0 0 0 4px rgba(224,200,151,0.25); }
 
-        /* ── TAGS ── */
         .cp-tags-wrap { flex: 1; }
-        .cp-tags-grid {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-        }
+        .cp-tags-grid { display: flex; flex-wrap: wrap; gap: 8px; }
         .cp-tag {
           padding: 6px 14px;
           border-radius: 20px;
@@ -302,11 +315,7 @@ export default function CreatePost() {
           transition: all .18s cubic-bezier(.22,1,.36,1);
           user-select: none;
         }
-        .cp-tag:hover {
-          border-color: #c8a86b;
-          background: rgba(224,200,151,0.2);
-          transform: translateY(-1px);
-        }
+        .cp-tag:hover { border-color: #c8a86b; background: rgba(224,200,151,0.2); transform: translateY(-1px); }
         .cp-tag.active {
           background: linear-gradient(135deg, #e0c897, #c8a86b);
           border-color: transparent;
@@ -315,19 +324,156 @@ export default function CreatePost() {
           animation: tagPop 0.25s cubic-bezier(.22,1,.36,1);
         }
 
-        /* ── DIVIDER ── */
         .cp-divider {
           height: 1.5px;
           background: linear-gradient(90deg, transparent, rgba(224,200,151,0.6), transparent);
           border: none;
         }
 
-        /* ── CONTENT AREA HEADER ── */
-        .cp-content-header {
+        /* ── THUMBNAIL ── */
+        .cp-thumb-row {
+          display: flex;
+          gap: 16px;
+          align-items: stretch;
+        }
+        .cp-thumb-drop {
+          flex: 0 0 200px;
+          height: 130px;
+          border: 2px dashed rgba(224,200,151,0.6);
+          border-radius: 14px;
+          background:
+            radial-gradient(ellipse 70% 70% at 50% 50%, rgba(224,200,151,0.07) 0%, transparent 70%),
+            rgba(253,248,239,0.5);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          gap: 6px;
+          transition: border-color .2s, background .2s, transform .15s;
+          position: relative;
+          overflow: hidden;
+        }
+        .cp-thumb-drop::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(224,200,151,0.04) 8px, rgba(224,200,151,0.04) 16px);
+        }
+        .cp-thumb-drop:hover {
+          border-color: #c8a86b;
+          background: rgba(224,200,151,0.12);
+          transform: translateY(-1px);
+        }
+        .cp-thumb-drop-icon {
+          font-size: 28px;
+          position: relative;
+          z-index: 1;
+          line-height: 1;
+        }
+        .cp-thumb-drop-text {
+          font-size: 12px;
+          font-weight: 600;
+          color: #a07840;
+          position: relative;
+          z-index: 1;
+          text-align: center;
+          line-height: 1.4;
+        }
+        .cp-thumb-drop-sub {
+          font-size: 11px;
+          color: rgba(160,120,64,0.6);
+          position: relative;
+          z-index: 1;
+        }
+        /* preview image fills the drop zone */
+        .cp-thumb-preview {
+          flex: 0 0 200px;
+          height: 130px;
+          border-radius: 14px;
+          overflow: hidden;
+          border: 2px solid rgba(224,200,151,0.55);
+          position: relative;
+          cursor: pointer;
+        }
+        .cp-thumb-preview img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .cp-thumb-preview-overlay {
+          position: absolute;
+          inset: 0;
+          background: rgba(42,31,14,0);
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: center;
+          gap: 8px;
+          transition: background .2s;
         }
+        .cp-thumb-preview:hover .cp-thumb-preview-overlay {
+          background: rgba(42,31,14,0.45);
+        }
+        .cp-thumb-action-btn {
+          opacity: 0;
+          transform: translateY(4px);
+          transition: opacity .2s, transform .2s;
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-size: 12px;
+          font-weight: 700;
+          cursor: pointer;
+          font-family: 'DM Sans', sans-serif;
+          border: none;
+        }
+        .cp-thumb-preview:hover .cp-thumb-action-btn { opacity: 1; transform: translateY(0); }
+        .cp-thumb-btn-change {
+          background: rgba(224,200,151,0.9);
+          color: #2a1f0e;
+        }
+        .cp-thumb-btn-remove {
+          background: rgba(180,60,20,0.85);
+          color: #fff;
+        }
+        /* info column next to preview/drop */
+        .cp-thumb-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 6px;
+        }
+        .cp-thumb-info-title {
+          font-size: 13px;
+          font-weight: 700;
+          color: #2a1f0e;
+        }
+        .cp-thumb-info-sub {
+          font-size: 12px;
+          color: #a07840;
+          line-height: 1.6;
+        }
+        .cp-thumb-info-specs {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin-top: 2px;
+        }
+        .cp-thumb-spec {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 3px 10px;
+          border-radius: 12px;
+          font-size: 11px;
+          font-weight: 600;
+          background: rgba(224,200,151,0.18);
+          border: 1px solid rgba(224,200,151,0.45);
+          color: #7a5c2e;
+        }
+
+        .cp-content-header { display: flex; align-items: center; justify-content: space-between; }
         .cp-mode-toggle {
           display: flex;
           background: rgba(224,200,151,0.15);
@@ -356,7 +502,6 @@ export default function CreatePost() {
           box-shadow: 0 2px 8px rgba(160,120,64,0.25);
         }
 
-        /* ── HTML EDITOR ── */
         .cp-html-editor {
           width: 100%;
           min-height: 320px;
@@ -377,23 +522,8 @@ export default function CreatePost() {
           box-shadow: 0 0 0 4px rgba(224,200,151,0.2), 0 4px 16px rgba(160,120,64,0.08);
         }
 
-        /* ── PREVIEW IFRAME ── */
-        .cp-preview-frame {
-          width: 100%;
-          min-height: 320px;
-          border: 2px solid rgba(224,200,151,0.5);
-          border-radius: 14px;
-          background: #fdf8ef;
-          overflow: hidden;
-        }
-
-        /* ── YOUTUBE ── */
         .cp-yt-wrap { display: flex; flex-direction: column; gap: 16px; }
-        .cp-yt-input-row {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-        }
+        .cp-yt-input-row { display: flex; gap: 10px; align-items: center; }
         .cp-yt-input {
           flex: 1;
           padding: 13px 18px;
@@ -407,10 +537,7 @@ export default function CreatePost() {
           transition: border-color .2s, box-shadow .2s;
         }
         .cp-yt-input::placeholder { color: rgba(160,120,64,0.4); }
-        .cp-yt-input:focus {
-          border-color: #c8a86b;
-          box-shadow: 0 0 0 4px rgba(224,200,151,0.2);
-        }
+        .cp-yt-input:focus { border-color: #c8a86b; box-shadow: 0 0 0 4px rgba(224,200,151,0.2); }
         .cp-yt-preview {
           width: 100%;
           aspect-ratio: 16/9;
@@ -425,14 +552,8 @@ export default function CreatePost() {
           font-size: 13px;
           letter-spacing: 1px;
         }
-        .cp-yt-iframe {
-          width: 100%;
-          height: 100%;
-          border: none;
-          display: block;
-        }
+        .cp-yt-iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* ── UPLOAD DOC ── */
         .cp-upload-zone {
           border: 2.5px dashed rgba(224,200,151,0.6);
           border-radius: 18px;
@@ -450,8 +571,7 @@ export default function CreatePost() {
           content: '';
           position: absolute;
           inset: 0;
-          background-image:
-            repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(224,200,151,0.04) 10px, rgba(224,200,151,0.04) 20px);
+          background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(224,200,151,0.04) 10px, rgba(224,200,151,0.04) 20px);
         }
         .cp-upload-zone:hover {
           border-color: #c8a86b;
@@ -459,12 +579,7 @@ export default function CreatePost() {
           transform: translateY(-2px);
           box-shadow: 0 8px 24px rgba(160,120,64,0.12);
         }
-        .cp-upload-icon {
-          font-size: 48px;
-          margin-bottom: 12px;
-          position: relative;
-          z-index: 1;
-        }
+        .cp-upload-icon { font-size: 48px; margin-bottom: 12px; position: relative; z-index: 1; }
         .cp-upload-title {
           font-family: 'Playfair Display', serif;
           font-size: 18px;
@@ -474,12 +589,7 @@ export default function CreatePost() {
           position: relative;
           z-index: 1;
         }
-        .cp-upload-sub {
-          font-size: 13px;
-          color: #a07840;
-          position: relative;
-          z-index: 1;
-        }
+        .cp-upload-sub { font-size: 13px; color: #a07840; position: relative; z-index: 1; }
         .cp-file-info {
           display: flex;
           align-items: center;
@@ -499,13 +609,21 @@ export default function CreatePost() {
         }
         .cp-file-remove:hover { background: rgba(224,200,151,0.3); color: #7a5c2e; }
 
-        /* ── SUBMIT ── */
-        .cp-actions {
-          display: flex;
-          justify-content: flex-end;
-          gap: 12px;
-          padding-top: 4px;
+        .cp-actions { display: flex; justify-content: flex-end; gap: 12px; padding-top: 4px; }
+        .cp-btn-secondary {
+          padding: 12px 28px;
+          border: 2px solid rgba(224,200,151,0.6);
+          border-radius: 12px;
+          background: transparent;
+          color: #a07840;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: 'DM Sans', sans-serif;
+          transition: all .18s;
+          letter-spacing: 0.3px;
         }
+        .cp-btn-secondary:hover { background: rgba(224,200,151,0.15); border-color: #c8a86b; }
         .cp-btn-primary {
           padding: 12px 36px;
           border: none;
@@ -529,7 +647,6 @@ export default function CreatePost() {
         }
         .cp-btn-primary:active { transform: translateY(0); }
 
-        /* ── CATEGORY PILL ── */
         .cp-category-pill {
           display: inline-flex;
           align-items: center;
@@ -544,9 +661,145 @@ export default function CreatePost() {
           color: #2a1f0e;
           margin-left: 8px;
         }
+
+        /* ── SUCCESS POPUP ── */
+        .cp-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(42,31,14,0.5);
+          backdrop-filter: blur(3px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          animation: cpFadeIn 0.2s ease both;
+        }
+        @keyframes cpFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .cp-popup {
+          background: linear-gradient(170deg, #fdf8ef 0%, #fffdf7 100%);
+          border: 1.5px solid rgba(224,200,151,0.7);
+          border-radius: 24px;
+          padding: 40px 36px 32px;
+          width: 380px;
+          max-width: calc(100vw - 48px);
+          text-align: center;
+          box-shadow: 0 24px 60px rgba(42,31,14,0.4), 0 0 0 1px rgba(224,200,151,0.2);
+          position: relative;
+          overflow: hidden;
+          animation: cpPopIn 0.4s cubic-bezier(0.22,1,0.36,1) both;
+        }
+        @keyframes cpPopIn {
+          from { opacity: 0; transform: scale(0.82) translateY(20px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .cp-popup::before {
+          content: '';
+          position: absolute;
+          top: -40px; left: 50%;
+          transform: translateX(-50%);
+          width: 220px; height: 110px;
+          background: radial-gradient(ellipse, rgba(224,200,151,0.22) 0%, transparent 70%);
+          pointer-events: none;
+        }
+        .cp-popup-icon {
+          width: 72px; height: 72px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #e0c897, #c8a86b);
+          display: flex; align-items: center; justify-content: center;
+          margin: 0 auto 20px;
+          box-shadow: 0 8px 24px rgba(160,120,64,0.35);
+          font-size: 32px;
+          position: relative;
+          z-index: 1;
+        }
+        .cp-popup-ring {
+          position: absolute;
+          inset: -6px;
+          border-radius: 50%;
+          border: 2px solid rgba(224,200,151,0.45);
+          animation: cpRingPulse 1.2s ease-out 0.3s both;
+        }
+        @keyframes cpRingPulse {
+          0%   { transform: scale(0.85); opacity: 0; }
+          50%  { opacity: 1; }
+          100% { transform: scale(1.3); opacity: 0; }
+        }
+        .cp-popup-title {
+          font-family: 'Playfair Display', serif;
+          font-size: 22px;
+          font-weight: 700;
+          color: #2a1f0e;
+          margin-bottom: 8px;
+          position: relative; z-index: 1;
+        }
+        .cp-popup-sub {
+          font-size: 14px;
+          color: #a07840;
+          line-height: 1.6;
+          margin-bottom: 24px;
+          position: relative; z-index: 1;
+        }
+        .cp-popup-meta {
+          display: flex;
+          justify-content: center;
+          gap: 8px;
+          margin-bottom: 24px;
+          flex-wrap: wrap;
+          position: relative; z-index: 1;
+        }
+        .cp-meta-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 5px 13px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          background: rgba(224,200,151,0.2);
+          border: 1px solid rgba(224,200,151,0.5);
+          color: #7a5c2e;
+        }
+        .cp-popup-divider {
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(224,200,151,0.5), transparent);
+          border: none;
+          margin-bottom: 20px;
+          position: relative; z-index: 1;
+        }
+        .cp-popup-actions { display: flex; gap: 10px; position: relative; z-index: 1; }
+        .cp-popup-ghost {
+          flex: 1;
+          padding: 11px 0;
+          border: 1.5px solid rgba(224,200,151,0.55);
+          border-radius: 12px;
+          background: transparent;
+          color: #a07840;
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: 'DM Sans', sans-serif;
+          transition: background .18s, border-color .18s;
+        }
+        .cp-popup-ghost:hover { background: rgba(224,200,151,0.15); border-color: #c8a86b; }
+        .cp-popup-gold {
+          flex: 1.4;
+          padding: 11px 0;
+          border: none;
+          border-radius: 12px;
+          background: linear-gradient(135deg, #a07840, #c8a86b, #e0c897);
+          color: #2a1f0e;
+          font-size: 13px;
+          font-weight: 700;
+          cursor: pointer;
+          font-family: 'DM Sans', sans-serif;
+          box-shadow: 0 4px 16px rgba(160,120,64,0.3);
+          transition: box-shadow .2s, transform .15s;
+        }
+        .cp-popup-gold:hover { box-shadow: 0 6px 22px rgba(160,120,64,0.42); transform: translateY(-1px); }
+        .cp-popup-gold:active { transform: translateY(0); }
       `}</style>
 
-      <div className={`cp-page`}>
+      <div className="cp-page">
         <div className={`cp-container ${mounted ? "visible" : ""}`}>
 
           {/* HEADER */}
@@ -579,10 +832,7 @@ export default function CreatePost() {
                 <select
                   className="cp-select"
                   value={category}
-                  onChange={(e) => {
-                    setCategory(e.target.value);
-                    setSelectedTags([]);
-                  }}
+                  onChange={(e) => { setCategory(e.target.value); setSelectedTags([]); }}
                 >
                   {CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -613,6 +863,56 @@ export default function CreatePost() {
 
             <hr className="cp-divider" />
 
+            {/* THUMBNAIL */}
+            <div className="cp-field">
+              <label className="cp-label">Ảnh thumbnail</label>
+              <div className="cp-thumb-row">
+                {thumbnailPreview ? (
+                  <div className="cp-thumb-preview">
+                    <img src={thumbnailPreview} alt="Thumbnail preview" />
+                    <div className="cp-thumb-preview-overlay">
+                      <button
+                        className="cp-thumb-action-btn cp-thumb-btn-change"
+                        onClick={() => thumbnailInputRef.current.click()}
+                      >Đổi ảnh</button>
+                      <button
+                        className="cp-thumb-action-btn cp-thumb-btn-remove"
+                        onClick={removeThumbnail}
+                      >Xoá</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="cp-thumb-drop" onClick={() => thumbnailInputRef.current.click()}>
+                    <div className="cp-thumb-drop-icon">🖼️</div>
+                    <div className="cp-thumb-drop-text">Nhấn để chọn ảnh</div>
+                    <div className="cp-thumb-drop-sub">JPG, PNG, WEBP</div>
+                  </div>
+                )}
+                <input
+                  ref={thumbnailInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  style={{ display: "none" }}
+                  onChange={handleThumbnailChange}
+                />
+                <div className="cp-thumb-info">
+                  <div className="cp-thumb-info-title">
+                    {thumbnailPreview ? thumbnail.name : "Chưa chọn ảnh"}
+                  </div>
+                  <div className="cp-thumb-info-sub">
+                    Ảnh thumbnail hiển thị trên danh sách bài đăng. Nên chọn ảnh có tỉ lệ 16:9 để hiển thị tốt nhất.
+                  </div>
+                  <div className="cp-thumb-info-specs">
+                    <span className="cp-thumb-spec">📐 16:9</span>
+                    <span className="cp-thumb-spec">🖼 JPG · PNG · WEBP</span>
+                    <span className="cp-thumb-spec">⚖️ Tối đa 5MB</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr className="cp-divider" />
+
             {/* CONTENT SECTION based on category */}
             {category === "Bài đăng" && (
               <div className="cp-field">
@@ -629,7 +929,6 @@ export default function CreatePost() {
                     >👁 Xem trước</button>
                   </div>
                 </div>
-
                 {editMode === "edit" ? (
                   <textarea
                     className="cp-html-editor"
@@ -685,10 +984,7 @@ export default function CreatePost() {
             {category === "Tài liệu" && (
               <div className="cp-field">
                 <label className="cp-label">Tệp tài liệu</label>
-                <div
-                  className="cp-upload-zone"
-                  onClick={() => fileInputRef.current.click()}
-                >
+                <div className="cp-upload-zone" onClick={() => fileInputRef.current.click()}>
                   <div className="cp-upload-icon">📄</div>
                   <div className="cp-upload-title">Kéo thả hoặc nhấn để tải lên</div>
                   <div className="cp-upload-sub">Hỗ trợ PDF, DOCX · Tối đa 50MB</div>
@@ -702,9 +998,7 @@ export default function CreatePost() {
                 </div>
                 {docFile && (
                   <div className="cp-file-info">
-                    <span className="cp-file-icon">
-                      {docFile.name.endsWith(".pdf") ? "📕" : "📘"}
-                    </span>
+                    <span className="cp-file-icon">{docFile.name.endsWith(".pdf") ? "📕" : "📘"}</span>
                     <span className="cp-file-name">{docFile.name}</span>
                     <button className="cp-file-remove" onClick={() => setDocFile(null)}>✕</button>
                   </div>
@@ -714,12 +1008,36 @@ export default function CreatePost() {
 
             {/* ACTIONS */}
             <div className="cp-actions">
-              <button className="cp-btn-primary">Đăng bài ✦</button>
+              <button className="cp-btn-primary" onClick={handleUploadClick}>Đăng bài</button>
             </div>
 
           </div>
         </div>
       </div>
+
+      {/* SUCCESS POPUP */}
+      {showSuccess && (
+        <div className="cp-overlay" onClick={(e) => e.target.classList.contains("cp-overlay") && setShowSuccess(false)}>
+          <div className="cp-popup">
+            <div className="cp-popup-icon">
+              <div className="cp-popup-ring" />
+              ✓
+            </div>
+            <div className="cp-popup-title">Đăng bài thành công!</div>
+            <div className="cp-popup-sub">Bài đăng của bạn đã được gửi và đang chờ hiển thị trên cộng đồng.</div>
+            <div className="cp-popup-meta">
+              <span className="cp-meta-pill">⏱ Vừa xong</span>
+              <span className="cp-meta-pill">👁 Công khai</span>
+              <span className="cp-meta-pill">📄 {category}</span>
+            </div>
+            <hr className="cp-popup-divider" />
+            <div className="cp-popup-actions">
+              <button className="cp-popup-ghost" onClick={() => setShowSuccess(false)}>Đóng</button>
+              <button className="cp-popup-gold" onClick={() => setShowSuccess(false)}>Xem bài đăng →</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
