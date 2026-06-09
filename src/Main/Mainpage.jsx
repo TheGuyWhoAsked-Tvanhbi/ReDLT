@@ -400,7 +400,7 @@ function Mainpage() {
                     onClick={() => setCurrentIndex(index)}
                     style={{
                       ...styles.progressDot,
-                      backgroundColor: index === currentIndex ? "#007bff" : "#ddd",
+                      backgroundColor: index === currentIndex ? "#ffd82b" : "#ddd",
                       transform: index === currentIndex ? "scale(1.3)" : "scale(1)"
                     }}
                     aria-label={`Chuyển sang slide ${index + 1}`}

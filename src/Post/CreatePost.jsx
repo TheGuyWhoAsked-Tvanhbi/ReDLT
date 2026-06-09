@@ -87,6 +87,11 @@ export default function CreatePost() {
     if (file) setDocFile(file);
   };
 
+  const handleUploadClick = () => {
+    
+  }
+
+
   return (
     <>
       <style>{`
