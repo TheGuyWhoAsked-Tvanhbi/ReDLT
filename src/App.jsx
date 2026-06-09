@@ -11,6 +11,7 @@ import Blogpage from './Main/Blogpage';
 import Header from './Header';
 import DebatesAI from './Main/Score';
 import DebateRandomizer from './Main/RandomTopic';
+import CreatePost from './Post/CreatePost';
 
 // Gomen amanai
 const PrivateRoute = ({ children }) => {
@@ -40,7 +41,7 @@ function App() {
           <Route path="/arena" element={<PrivateRoute><Arena /></PrivateRoute>} />
           <Route path="/user" element={<PrivateRoute><Userpage /></PrivateRoute>} />
           <Route path="/ai-scores" element={<PrivateRoute><DebatesAI /></PrivateRoute>} />
-          
+          <Route path="/createpost" element={<PrivateRoute><CreatePost /></PrivateRoute>} />
         </Routes>
       </div>
     </AuthProvider>

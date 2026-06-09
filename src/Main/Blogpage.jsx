@@ -4,6 +4,7 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { db , storage } from "../firebase.js";
 
 import { BsFilePost } from "react-icons/bs";
+import { FaPushed } from "react-icons/fa";
 
 function Blogpage() {
   const [postLists, setPostList] = useState([]);
@@ -345,9 +346,15 @@ function Blogpage() {
                 <h1>Bài Đăng</h1>
                 <p className="bp-header-sub">Khám phá kiến thức và kinh nghiệm từ cộng đồng tranh biện</p>
               </div>
-              {!loading && (
-                <div className="bp-count-badge"><BsFilePost /> {postLists.length} bài đăng</div>
-              )}
+
+              <div style={{ display: "flex", justifyContent: "space-between", gap: "8px", flexDirection: "column"}}>
+                <div className="bp-count-badge hover:" onClick={() => window.location.pathname = "/createpost"}>
+                    <FaPushed />Tạo bài đăng
+                </div>
+                {!loading && (
+                    <div className="bp-count-badge"><BsFilePost /> {postLists.length} bài đăng</div>
+                )}
+              </div>
             </div>
           </div>
 
