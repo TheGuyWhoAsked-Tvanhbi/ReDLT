@@ -7,7 +7,7 @@ const TAGS_OPTIONS = [
   "Lập luận", "Phản biện", "Kỹ năng", "Chiến thuật",
   "Kinh nghiệm", "Phân tích", "Thi đấu", "Tài liệu gốc",
   "Hướng dẫn", "Tranh luận", "Nghiên cứu", "Thực hành",
-  "Tập sự", "Chuyên sâu",
+  "Tập sự", "Chuyên sâu", "Tiếng Anh", "Tiếng Việt",
 ];
 
 const CATEGORIES = ["Bài đăng", "Ván đấu", "Tài liệu"];
@@ -65,6 +65,7 @@ export default function CreatePost() {
   const iframeRef = useRef(null);
   const fileInputRef = useRef(null);
   const thumbnailInputRef = useRef(null);
+  const [postIdRef, setPostIdRef] = useState(null);
 
   const postsCollectionRef = collection(db, "posts");
 
@@ -119,15 +120,29 @@ export default function CreatePost() {
     await uploadBytes(imageRef, thumbnail);
 
     if (category === "Bài đăng") {
-      await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: htmlContent, createdAt: new Date()});
+      const postRef = await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: htmlContent, createdAt: new Date()});
+      setPostIdRef(postRef);
       setShowSuccess(true);
     } else if (category === "Ván đấu") {
-      await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: youtubeLink, createdAt: new Date()});
+      const postRef = await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: youtubeLink, createdAt: new Date()});
+      setPostIdRef(postRef);
       setShowSuccess(true);
     } else if (category === "Tài liệu") {
+      // đã upload tài liệu được
+      const docExt = `documents/${Date.now()}_${docFile.name}`;
+      const docRef = ref(storage, docExt);
+      await uploadBytes(docRef, docFile);
+      const postRef = await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: docExt, createdAt: new Date()});
+      setPostIdRef(postRef);
       setShowSuccess(true);
     }
-    console.log("all complete");
+    console.log("handleUploadClick returned 1");
+  };
+
+  const handleContinue = async () => {
+    await setShowSuccess(false);
+    const postUid = await postIdRef.id;
+    window.location.pathname = `/post/${postUid}`;
   };
 
   return (
@@ -1033,7 +1048,7 @@ export default function CreatePost() {
             <hr className="cp-popup-divider" />
             <div className="cp-popup-actions">
               <button className="cp-popup-ghost" onClick={() => setShowSuccess(false)}>Đóng</button>
-              <button className="cp-popup-gold" onClick={() => setShowSuccess(false)}>Xem bài đăng →</button>
+              <button className="cp-popup-gold" onClick={handleContinue}>Xem bài đăng →</button>
             </div>
           </div>
         </div>

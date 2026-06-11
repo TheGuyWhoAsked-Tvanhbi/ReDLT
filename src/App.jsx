@@ -12,6 +12,7 @@ import Header from './Header';
 import DebatesAI from './Main/Score';
 import DebateRandomizer from './Main/RandomTopic';
 import CreatePost from './Post/CreatePost';
+import PostView from './Post/ViewPost';
 
 // Gomen amanai
 const PrivateRoute = ({ children }) => {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/blogs" element={<Blogpage />} />
           <Route path="/random-topic" element={<DebateRandomizer />} />
+          <Route path="/post/:id" element={<PostView />} />
 
 
           {/* Các trang yêu cầu ĐĂNG NHẬP */}
