@@ -7,7 +7,7 @@ const CREAM = "#fdf8ef";
 const BROWN = "#7a5c2e";
 const WARM_WHITE = "#fffdf8";
 
-// 👇 Dán URL hoặc đường dẫn ảnh nền vào đây (để trống nếu không dùng)
+// BG HERE <------------------------------------------------
 const BG_IMAGE = "";
 
 const days = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];

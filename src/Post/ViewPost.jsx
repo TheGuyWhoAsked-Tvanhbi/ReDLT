@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
-import { ref, getDownloadURL } from "firebase/storage";
+import { doc, getDoc , deleteDoc , collection} from "firebase/firestore";
+import { ref, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage , auth } from "../firebase.js";
 
 import { FaFlag } from "react-icons/fa";
@@ -43,7 +43,11 @@ const CATEGORY_META = {
   "Tài liệu": { emoji: "📚", label: "Tài liệu" },
 };
 
+const collectionName = "posts";
+
 export default function PostView() {
+  //debug ở đây
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
@@ -57,8 +61,20 @@ export default function PostView() {
   const menuRef = useRef(null);
 
   // Điều kiện hiển thị chỉnh sửa/xoá — tạm thời true
-  const canEdit = true;
-  const canDelete = true;
+  const canEdit = auth.currentUser?.uid === post?.author?.uid;
+  const canDelete = auth.currentUser?.uid === post?.author?.uid;
+
+  const handleDelete = async (documentId, fileExt, content) => {
+    setShowMenu(false);
+    if (await !confirm("Bạn có chắc muốn xoá bài đăng này? Hành động này không thể hoàn tác.")) return;
+    await deleteObject(ref(storage, fileExt));
+    if (content.startsWith("documents/")) {
+      await deleteObject(ref(storage, content));
+    }
+    await deleteDoc(doc(db, collectionName, documentId));
+    window.location.pathname = "/blogs";
+    console.log("Delete Post Successfully");
+  };
 
   // Đóng menu khi click ra ngoài
   useEffect(() => {
@@ -430,21 +446,21 @@ export default function PostView() {
               {showMenu && (
                 <div className="pv-menu">
                   <button className="pv-menu-item" onClick={() => { setShowMenu(false); /* TODO: báo cáo */ }}>
-                    🚩 Báo cáo
+                    <FaFlag /> Báo cáo
                   </button>
                   {canEdit && (
                     <>
                       <div className="pv-menu-sep" />
                       <button className="pv-menu-item" onClick={() => { setShowMenu(false); /* TODO: chỉnh sửa */ }}>
-                        ✏️ Chỉnh sửa
+                        <FaPencil /> Chỉnh sửa
                       </button>
                     </>
                   )}
                   {canDelete && (
                     <>
                       <div className="pv-menu-sep" />
-                      <button className="pv-menu-item danger" onClick={() => { setShowMenu(false); /* TODO: xoá */ }}>
-                        🗑 Xoá bài đăng
+                      <button className="pv-menu-item danger" onClick={() => { handleDelete(post.id, post.fileExt, post.content); /* TODO: xoá */ }}>
+                        <RiDeleteBin5Fill /> Xoá bài đăng
                       </button>
                     </>
                   )}

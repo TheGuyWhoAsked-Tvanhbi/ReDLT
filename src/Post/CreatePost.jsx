@@ -128,7 +128,7 @@ export default function CreatePost() {
       setPostIdRef(postRef);
       setShowSuccess(true);
     } else if (category === "Tài liệu") {
-      // đã upload tài liệu được
+      // đã upload tài liệu được -vanh
       const docExt = `documents/${Date.now()}_${docFile.name}`;
       const docRef = ref(storage, docExt);
       await uploadBytes(docRef, docFile);

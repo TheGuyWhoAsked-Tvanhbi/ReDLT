@@ -413,7 +413,7 @@ export default function DebateRandomizer() {
 
           <div className="dr-title">Ngẫu Nhiên Chủ Đề</div>
 
-          {/* result */}
+          {/* rslt */}
           <div className="dr-result-wrap">
             {topic === null ? (
               <div className="dr-result-empty">Nhấn nút bên dưới để bắt đầu quay ngẫu nhiên...</div>
@@ -428,7 +428,7 @@ export default function DebateRandomizer() {
 
           <hr className="dr-divider" />
 
-          {/* button */}
+          {/* btn */}
           <div className="dr-btn-wrap">
             {!spinning && topic !== null && <div className="dr-ring" />}
             <button className="dr-btn" onClick={handleRandom} disabled={spinning}>

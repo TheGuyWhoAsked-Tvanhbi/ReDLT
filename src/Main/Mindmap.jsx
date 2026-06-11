@@ -6,7 +6,6 @@ const MindmapPage = () => {
   const containerRef = useRef(null)
   const guideRef   = useRef(null)
 
-  // Dùng IntersectionObserver thay cho CSS animation để kiểm soát tốt hơn
   useEffect(() => {
     const targets = [
       heroRef.current,
@@ -167,7 +166,6 @@ const MindmapPage = () => {
           <h2 className="mm-container-title">✨ Tạo Mindmap - Sơ đồ tư duy cho bạn</h2>
           <p className="mm-container-sub">Vẽ sơ đồ tư duy sáng tạo, đẹp mắt và lưu ngay trên thiết bị của bạn</p>
 
-          {/* Guide */}
           <div className="mm-guide" ref={guideRef}>
             <h3>Hướng dẫn:</h3>
             <ol>

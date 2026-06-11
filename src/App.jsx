@@ -44,6 +44,8 @@ function App() {
           <Route path="/user" element={<PrivateRoute><Userpage /></PrivateRoute>} />
           <Route path="/ai-scores" element={<PrivateRoute><DebatesAI /></PrivateRoute>} />
           <Route path="/createpost" element={<PrivateRoute><CreatePost /></PrivateRoute>} />
+
+          
         </Routes>
       </div>
     </AuthProvider>

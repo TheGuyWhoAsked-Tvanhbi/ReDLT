@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from "react";
+import { IoIosPeople , IoMdPeople} from "react-icons/io";
+import { IoPersonSharp } from "react-icons/io5";
 
 const DEBATES_CLOUD_RUN_BASE_URL = "http://127.0.0.1:8080";
 const DEBATES_GCS_BUCKET_NAME = "debates-audio-bucket";
 
 const PARTICIPANT_OPTIONS = [
-  { count: 2, icon: "👥" },
-  { count: 4, icon: "👨‍👩‍👧‍👦" },
-  { count: 6, icon: "🫂" },
+  { count: 2, icon: <IoPersonSharp /> },
+  { count: 4, icon: <IoMdPeople /> },
+  { count: 6, icon: <IoIosPeople /> },
 ];
 
 const HERO_IMG = "/assets/arena_hero_img.jpg";
