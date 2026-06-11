@@ -543,7 +543,7 @@ export default function PostView() {
                       <div className="pv-pdf-label">📄 Tài liệu đính kèm</div>
                       {pdfUrl && (
                         <a href={pdfUrl} target="_blank" rel="noopener noreferrer" download className="pv-pdf-download">
-                          ⬇ Tải xuống
+                          Xem ở tab mới
                         </a>
                       )}
                     </div>
