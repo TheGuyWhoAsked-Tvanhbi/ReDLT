@@ -120,11 +120,11 @@ export default function CreatePost() {
     await uploadBytes(imageRef, thumbnail);
 
     if (category === "Bài đăng") {
-      const postRef = await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: htmlContent, createdAt: new Date()});
+      const postRef = await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: localStorage.getItem(currentUsername), pic: localStorage.getItem(currentProfilePic)}, title, fileExt, category, tags: selectedTags, content: htmlContent, createdAt: new Date()});
       setPostIdRef(postRef);
       setShowSuccess(true);
     } else if (category === "Ván đấu") {
-      const postRef = await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: youtubeLink, createdAt: new Date()});
+      const postRef = await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: localStorage.getItem(currentUsername), pic: localStorage.getItem(currentProfilePic)}, title, fileExt, category, tags: selectedTags, content: youtubeLink, createdAt: new Date()});
       setPostIdRef(postRef);
       setShowSuccess(true);
     } else if (category === "Tài liệu") {
@@ -132,7 +132,7 @@ export default function CreatePost() {
       const docExt = `documents/${Date.now()}_${docFile.name}`;
       const docRef = ref(storage, docExt);
       await uploadBytes(docRef, docFile);
-      const postRef = await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: auth.currentUser.displayName}, title, fileExt, category, tags: selectedTags, content: docExt, createdAt: new Date()});
+      const postRef = await addDoc(postsCollectionRef, {author: {uid: auth.currentUser.uid, name: localStorage.getItem(currentUsername), pic: localStorage.getItem(currentProfilePic)}, title, fileExt, category, tags: selectedTags, content: docExt, createdAt: new Date()});
       setPostIdRef(postRef);
       setShowSuccess(true);
     }

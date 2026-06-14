@@ -9,7 +9,6 @@ export default function Userpage() {
   async function handleLogout() {
     try {
       await logout();
-      // Chuyển hướng người dùng về trang đăng nhập sau khi đăng xuất thành công
       navigate('/login');
     } catch (error) {
       console.error("Đăng xuất thất bại:", error.message);

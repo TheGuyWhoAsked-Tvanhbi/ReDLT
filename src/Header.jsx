@@ -4,12 +4,26 @@ import { GiAxeSword } from "react-icons/gi";
 import { useLocation } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import { useAuth } from "./AuthContext";
+import { auth } from "./firebase.js";
 
 const Header = () => {
   const [visible, setVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
   const location = useLocation();
+  const userMenuRef = useRef(null);
+  const { logout } = useAuth();
+
+  async function handleLogout() {
+    try {
+      await logout();
+      window.location.pathname = "/login";
+    } catch (error) {
+      console.error("Đăng xuất thất bại:", error.message);
+    }
+  }
 
   const navItems = [
     { href: "/",        label: "Trang Chủ", icon: <AiFillHome /> },
@@ -33,6 +47,16 @@ const Header = () => {
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const isActive = (href) => {
@@ -76,6 +100,12 @@ const Header = () => {
           0%   { box-shadow: 0 0 0 0 rgba(212, 160, 23, 0.55); }
           70%  { box-shadow: 0 0 0 8px rgba(212, 160, 23, 0); }
           100% { box-shadow: 0 0 0 0 rgba(212, 160, 23, 0); }
+        }
+
+        /* ── Dropdown menu animation ── */
+        @keyframes dropdownOpen {
+          from { transform: translateY(-8px) scale(0.96); opacity: 0; }
+          to   { transform: translateY(0)    scale(1);    opacity: 1; }
         }
 
         /* ── Header gốc ── */
@@ -218,6 +248,11 @@ const Header = () => {
           background: rgba(212, 160, 23, 0.2);
         }
 
+        /* ── User menu wrapper ── */
+        .user-menu-wrap {
+          position: relative;
+        }
+
         /* ── User icon button ── */
         .user-btn {
           display: flex;
@@ -253,6 +288,107 @@ const Header = () => {
         .user-btn:active {
           transform: scale(0.95);
         }
+
+        .user-btn.menu-open {
+          background: rgba(212, 160, 23, 0.3);
+          color: #5a3800;
+          animation: none;
+        }
+
+        /* ── User dropdown menu ── */
+        .user-dropdown {
+          position: absolute;
+          top: calc(100% + 12px);
+          right: 0;
+          min-width: 240px;
+          background: #fffefb;
+          border: 1px solid rgba(212, 160, 23, 0.25);
+          border-radius: 14px;
+          box-shadow: 0 12px 32px rgba(180, 120, 0, 0.18);
+          z-index: 1100;
+          overflow: hidden;
+          transform-origin: top right;
+          animation: dropdownOpen 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .user-dropdown-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 16px;
+          border-bottom: 1px solid rgba(212, 160, 23, 0.18);
+        }
+
+        .user-dropdown-avatar {
+          width: 40px; height: 40px;
+          border-radius: 50%;
+          background: rgba(212, 160, 23, 0.15);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #c8a86b;
+          font-size: 26px;
+          flex-shrink: 0;
+          overflow: hidden;
+        }
+        .user-dropdown-avatar img {
+          width: 100%; height: 100%; object-fit: cover;
+        }
+
+        .user-dropdown-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          min-width: 0;
+        }
+        .user-dropdown-name {
+          font-family: 'Be Vietnam Pro', sans-serif;
+          font-weight: 600;
+          font-size: 14px;
+          color: #3a2a00;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .user-dropdown-email {
+          font-family: 'Be Vietnam Pro', sans-serif;
+          font-size: 12px;
+          color: #a08658;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .user-dropdown-list {
+          display: flex;
+          flex-direction: column;
+          padding: 8px;
+        }
+
+        .user-dropdown-item {
+          display: flex;
+          align-items: center;
+          padding: 10px 12px;
+          border-radius: 8px;
+          font-family: 'Be Vietnam Pro', sans-serif;
+          font-size: 14px;
+          font-weight: 500;
+          color: #92620a;
+          text-decoration: none;
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+        .user-dropdown-item:hover {
+          background: rgba(212, 160, 23, 0.12);
+          color: #5a3800;
+        }
+        .user-dropdown-item.danger:hover {
+          background: rgba(220, 38, 38, 0.08);
+          color: #b91c1c;
+        }
       `}</style>
 
       <header className={[
@@ -276,21 +412,44 @@ const Header = () => {
               <ul className="nav-list">
                 {navItems.map(({ href, label, icon }) => (
                   <li key={href}>
-                    <a
-                      href={href}
-                      className={`nav-link${isActive(href) ? " active" : ""}`}
-                    >
+                    <Link to={href} className={`nav-link${isActive(href) ? " active" : ""}`}>
                       {icon} {label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
             </nav>
 
-            {/* Nút user chỉ có icon, không có label */}
-            <Link to="/user" className="user-btn" aria-label="Tài khoản người dùng">
-              <FaUserCircle />
-            </Link>
+            {/* Nút user + dropdown menu */}
+            <div className="user-menu-wrap" ref={userMenuRef}>
+              <button
+                type="button"
+                className={`user-btn${userMenuOpen ? " menu-open" : ""}`}
+                aria-label="Tài khoản người dùng"
+                onClick={() => setUserMenuOpen((prev) => !prev)}
+              >
+                <FaUserCircle />
+              </button>
+
+              {userMenuOpen && (
+                <div className="user-dropdown">
+                  <div className="user-dropdown-header">
+                    <div className="user-dropdown-avatar">
+                      <FaUserCircle />
+                    </div>
+                    <div className="user-dropdown-info">
+                      <span className="user-dropdown-name">{localStorage.getItem("currentUsername")}</span>
+                      <span className="user-dropdown-email">{localStorage.getItem("currentEmail")}</span>
+                    </div>
+                  </div>
+                  <div className="user-dropdown-list">
+                    <Link to={`/profile/${auth.currentUser.uid}`} className="user-dropdown-item">Tổng quan</Link>
+                    <Link to="/edit" className="user-dropdown-item">Sửa Hồ sơ</Link>
+                    <button type="button" className="user-dropdown-item danger" onClick={handleLogout}>Đăng xuất</button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>

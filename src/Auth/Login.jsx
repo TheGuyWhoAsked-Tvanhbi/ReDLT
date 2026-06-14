@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "/src/AuthContext";
+import { auth , db } from "../firebase.js";
+import { addDoc , collection, getDoc , doc} from "firebase/firestore" ;
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -29,6 +31,11 @@ function Login() {
     setError("");
     try {
       await login(email, password);
+      const snap = await getDoc(doc(db, "userinfo", auth.currentUser.uid));
+      const data = { ...snap.data(), id: snap.id };
+      await localStorage.setItem("currentUsername",data?.username);
+      await localStorage.setItem("currentEmail",email);
+      await localStorage.setItem("currentProfilePic",data?.profilePic);
       alert("Đăng nhập thành công!");
       navigate("/");
     } catch (error) {
@@ -44,6 +51,7 @@ function Login() {
     }
     try {
       await signup(email, password);
+      await addDoc(collection(db, "userinfo"), {bio: "", username: email, matches: {}, posted: 0, profilePic: "", createdAt: new Date()});
       switchMode(false);
     } catch (error) {
       setError(firebaseErrorMessage(error.code));
@@ -69,6 +77,7 @@ function Login() {
       case "auth/invalid-credential":
         return "Email hoặc mật khẩu không đúng.";
       default:
+        console.log(code)
         return "Đã có lỗi xảy ra. Vui lòng thử lại.";
     }
   }
@@ -206,8 +215,10 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     gap: "20px",
-    backgroundImage: `linear-gradient(135deg, rgba(251,238,194,0.7), rgba(255,255,255,0.7)), url("https://t3.ftcdn.net/jpg/03/73/78/44/360_F_373784438_lEuzytWcTtLRdZ9CFks7I81yG3lOiSWK.jpg")`,
-    backgroundRepeat: 'repeat',
+    backgroundImage: `url(/assets/login_bg.png)`,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: "cover",
     backgroundColor: "#f4f6fb",
     padding: "16px",
     fontFamily: "sans-serif",
@@ -241,9 +252,13 @@ const styles = {
   card: {
     width: "100%",
     maxWidth: "600px",
-    backgroundColor: "#ffffff",
-    borderRadius: "16px",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08)",
+    background: "linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08))",
+    backdropFilter: "blur(20px)",
+    WebkitBackdropFilter: "blur(20px)",
+    border: "1px solid rgba(255,255,255,0.3)",
+    borderRadius: "24px",
+    boxShadow:
+      "0 8px 32px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.4)",
     padding: "32px",
     boxSizing: "border-box",
   },

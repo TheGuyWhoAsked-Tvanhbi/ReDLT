@@ -16,19 +16,19 @@ function Mainpage() {
       id: 1,
       title: "ReDLT – Nền tảng tranh biện trực tuyến dành cho học sinh phổ thông",
       description: "Không chỉ là nơi học tranh biện, ReDLT là không gian để bạn cất lên quan điểm, rèn luyện tư duy và tự tin thể hiện bản thân.",
-      image: "/assets/WhiteStyle2_img.jpg"
+      image: "https://images.pexels.com/photos/8419626/pexels-photo-8419626.jpeg"
     },
     {
       id: 2,
       title: "Học tranh biện theo cách gần gũi với học sinh",
       description: "Không khô khan hay quá học thuật, ReDLT xây dựng môi trường thân thiện, trực quan và dễ tiếp cận cho học sinh phổ thông.",
-      image: "/assets/WhiteStyle_img.jpg"
+      image: "https://images.pexels.com/photos/29555738/pexels-photo-29555738.jpeg"
     },
     {
       id: 3,
       title: "Thông điệp của ReDLT",
       description: "Tranh biện không phải để thắng người khác, mà để hiểu thế giới rõ hơn và hoàn thiện chính mình hơn mỗi ngày.",
-      image: "/assets/WhitetoGreen_img.jpg"
+      image: "https://images.pexels.com/photos/8199172/pexels-photo-8199172.jpeg"
     }
   ]
 

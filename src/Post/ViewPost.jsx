@@ -60,7 +60,6 @@ export default function PostView() {
   const iframeRef = useRef(null);
   const menuRef = useRef(null);
 
-  // Điều kiện hiển thị chỉnh sửa/xoá — tạm thời true
   const canEdit = auth.currentUser?.uid === post?.author?.uid;
   const canDelete = auth.currentUser?.uid === post?.author?.uid;
 
@@ -76,7 +75,6 @@ export default function PostView() {
     console.log("Delete Post Successfully");
   };
 
-  // Đóng menu khi click ra ngoài
   useEffect(() => {
     const handler = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) setShowMenu(false);
@@ -95,7 +93,6 @@ export default function PostView() {
         if (!snap.exists()) { setLoading(false); return; }
         const data = { ...snap.data(), id: snap.id };
 
-        // thumbnail
         if (data.fileExt) {
           try {
             data.thumbnailUrl = await getDownloadURL(ref(storage, data.fileExt));
@@ -104,7 +101,6 @@ export default function PostView() {
 
         setPost(data);
 
-        // pdf url for Tài liệu
         if (data.category === "Tài liệu" && data.content) {
           setPdfLoading(true);
           try {
@@ -121,7 +117,6 @@ export default function PostView() {
     if (id) fetchPost();
   }, [id]);
 
-  // inject HTML content into iframe
   useEffect(() => {
     if (post?.category === "Bài đăng" && iframeRef.current && post.content) {
       const doc = iframeRef.current.contentDocument;
