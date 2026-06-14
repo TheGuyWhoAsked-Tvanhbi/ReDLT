@@ -21,7 +21,7 @@ const PrivateRoute = ({ children }) => {
   return currentUser ? children : <Navigate to="/login" replace />;
 };
 
-const MUSIC_URL = "https://youtu.be/KgayxOF4Y7E"; //tạm thời chx có nhạc
+const MUSIC_URL = "/assets/bg_music.mp3";
 
 const MusicButton = () => {
   const audioRef = useRef(null);

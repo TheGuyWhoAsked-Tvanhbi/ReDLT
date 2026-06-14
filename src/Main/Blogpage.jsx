@@ -26,9 +26,8 @@ function Blogpage() {
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
-  // search state
   const [searchText, setSearchText] = useState("");
-  const [activeCategory, setActiveCategory] = useState(null); // null = all
+  const [activeCategory, setActiveCategory] = useState(null);
   const [activeTags, setActiveTags] = useState([]);
   const [showTagPanel, setShowTagPanel] = useState(false);
 
