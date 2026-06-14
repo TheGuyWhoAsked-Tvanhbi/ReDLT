@@ -14,11 +14,15 @@ const Header = () => {
   const lastScrollY = useRef(0);
   const location = useLocation();
   const userMenuRef = useRef(null);
+  const { currentUser } = useAuth();
   const { logout } = useAuth();
 
   async function handleLogout() {
     try {
       await logout();
+      await localStorage.clear("currentUsername");
+      await localStorage.clear("currentEmail");
+      await localStorage.clear("currentProfilePic");
       window.location.pathname = "/login";
     } catch (error) {
       console.error("Đăng xuất thất bại:", error.message);
@@ -426,7 +430,13 @@ const Header = () => {
                 type="button"
                 className={`user-btn${userMenuOpen ? " menu-open" : ""}`}
                 aria-label="Tài khoản người dùng"
-                onClick={() => setUserMenuOpen((prev) => !prev)}
+                onClick={() => {
+                  if (!currentUser) {
+                    window.location.pathname = "/login";
+                    return;
+                  }
+                  setUserMenuOpen((prev) => !prev)
+                }}
               >
                 <FaUserCircle />
               </button>

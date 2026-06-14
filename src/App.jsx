@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from "./AuthContext";
 
@@ -21,12 +21,65 @@ const PrivateRoute = ({ children }) => {
   return currentUser ? children : <Navigate to="/login" replace />;
 };
 
+const MUSIC_URL = "https://youtu.be/KgayxOF4Y7E"; //tạm thời chx có nhạc
+
+const MusicButton = () => {
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  return (
+    <>
+      <audio ref={audioRef} src={MUSIC_URL} loop />
+      <button
+        onClick={toggleMusic}
+        style={{
+          position: "fixed",
+          bottom: "24px",
+          right: "24px",
+          width: "56px",
+          height: "56px",
+          borderRadius: "50%",
+          border: "none",
+          cursor: "pointer",
+          zIndex: 1000,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "22px",
+          background: isPlaying
+            ? "linear-gradient(135deg, #e0c897, #c8a86b)"
+            : "#2a2a2a",
+          color: isPlaying ? "#2a2a2a" : "#e0c897",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+          transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
+        }}
+        aria-label={isPlaying ? "Tắt nhạc" : "Mở nhạc"}
+        title={isPlaying ? "Tắt nhạc" : "Mở nhạc"}
+      >
+        {isPlaying ? "♫" : "♪"}
+      </button>
+    </>
+  );
+};
+
 function App() {
   const location = useLocation();
 
   return (
     <AuthProvider>
       <Header />
+      <MusicButton />
       <div style={{ paddingTop: "calc(11vh + 32px)" }}>
         <Routes location={location}>
           

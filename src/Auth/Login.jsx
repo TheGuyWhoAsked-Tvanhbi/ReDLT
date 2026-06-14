@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "/src/AuthContext";
 import { auth , db } from "../firebase.js";
-import { addDoc , collection, getDoc , doc} from "firebase/firestore" ;
+import { collection, getDoc, doc , setDoc } from "firebase/firestore" ;
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -50,8 +50,8 @@ function Login() {
       return;
     }
     try {
-      await signup(email, password);
-      await addDoc(collection(db, "userinfo"), {bio: "", username: email, matches: {}, posted: 0, profilePic: "", createdAt: new Date()});
+      const userCred = await signup(email, password);
+      await setDoc(doc(db, "userinfo", userCred.user.uid), {bio: "", username: email, matches: {}, posted: 0, profilePic: "", createdAt: new Date()});
       switchMode(false);
     } catch (error) {
       setError(firebaseErrorMessage(error.code));
